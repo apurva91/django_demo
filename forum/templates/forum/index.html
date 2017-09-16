@@ -1,7 +1,60 @@
+{% extends 'forum/base.html' %}
 
-    {% for fp in latest_posts %}
-    Topic: <a href = './{{fp.id}}'> {{fp.topic}} </a>
-    <br> Posted in: <a href = './category/{{fp.category}}'> {{fp.category.name}}</a>
-    <br>Posted On : {{fp.date}} 
- 	<hr> 
-    {% endfor %}
+{% block content %}
+
+<script>
+	$(function () {
+		$('#postNew').on('submit', function (e) {
+			e.preventDefault();
+			$('#PostNew').attr('disabled',true);
+			$.ajax({
+				type: 'post',
+				url: '',
+				data: $('#postNew').serialize(),
+				success: function (data) {
+					$('#sf').html(data);
+					$('#myModal').modal('show');
+					$( "#myModalClose" ).click(function() {
+						location.reload(true);
+					});
+				}
+			});
+		});
+	});
+</script>
+<script>
+	function addAnewPost() {
+		$('#myModal').modal('show');
+	}
+</script>
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Post Status</h4>
+			</div>
+			<div class="modal-body">
+				<div id="sf">
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id="myModalClose" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<button class="btn btn-primary btn-lg" id="addap" onclick="addAnewPost();">Add A Post</button>
+<br>
+<br>
+
+{% for fp in latest_posts %}
+Topic: <a href = './{{fp.id}}'> {{fp.topic}} </a>
+<br> Posted in: <a href = './category/{{fp.category}}'> {{fp.category.name}}</a>
+<br>Posted On : {{fp.date}} 
+<hr> 
+{% endfor %}
+{% endblock %}
