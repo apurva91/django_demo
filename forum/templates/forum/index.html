@@ -1,0 +1,7 @@
+
+    {% for fp in latest_posts %}
+    Topic: <a href = './{{fp.id}}'> {{fp.topic}} </a>
+    <br> Posted in: <a href = './category/{{fp.category}}'> {{fp.category.name}}</a>
+    <br>Posted On : {{fp.date}} 
+ 	<hr> 
+    {% endfor %}
