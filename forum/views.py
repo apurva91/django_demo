@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse, Http404
-from .models import ForumPost, PostCategory
+from .models import ForumPost, PostCategory, Comment
 from .forms import PostForm, SignUpForm
 # Create your views here.
 
@@ -14,7 +14,9 @@ def SignUp(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            user.birth_date=form.cleaned_data.get('birth_date')
+            user.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -45,7 +47,8 @@ def Index(request):
 def PostDetail(request,post_id):
 
 	current_post = get_object_or_404(ForumPost, pk=post_id)
-	return render(request,'forum/post_detail.html',{'current_post':current_post})
+	current_post_comments = Comment.objects.filter(forumpost=current_post.id).order_by('-date')
+	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments})
 
 def CategoryIndex(request, category):
 
@@ -72,16 +75,19 @@ def CategoryIndex(request, category):
 #	return HttpResponse(query.count())
 
 def NewPost(request):
-	if request.method=='POST':
-		form = PostForm(request.POST)
-		if form.is_valid():
-			post = form.save(commit=False)
-			post.date = timezone.now()
-			post.save()
-			return redirect('/posts/'+str(post.id))
+	if request.user.is_authenticated:
+		
+		if request.method=='POST':
+			form = PostForm(request.POST)
+			if form.is_valid():
+				post = form.save(commit=False)
+				post.date = timezone.now()
+				post.author = user
+				post.save()
+				return redirect('/posts/'+str(post.id))
+		else:
+			form = PostForm()
+
+		return render(request, 'forum/post_edit.html', {'form': form})
 	else:
-		form = PostForm()
-
-	return render(request, 'forum/post_edit.html', {'form': form})
-    	
-
+		return render(request, 'forum/login')

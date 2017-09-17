@@ -4,9 +4,21 @@
 
 {% with current_post as cp%}
 <h1>{{cp.topic}}</h1>
+<b> By: </b> {{cp.author}}
 <b> Posted on :</b> {{cp.date}}
 <p>{{cp.text}}</p>
 <b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
 <br>
 {%endwith%}
+<br>
+<div class="comments container">
+{%for com in current_post_comments%}
+<p>
+By: {{com.author}}
+On: {{com.date}}
+<br>
+{{com.text}}
+</p>
+{%endfor%}
+</div>	
 {%endblock%}

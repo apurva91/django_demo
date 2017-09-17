@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -22,10 +23,19 @@ class PostCategory(models.Model):
         verbose_name_plural = 'post categories'	
 
 class ForumPost(models.Model):
-	topic = models.CharField(max_length=255)
-	text = models.CharField(max_length=1000)
-	date = models.DateTimeField('date')
-	category = models.ForeignKey( PostCategory, on_delete = models.CASCADE )
+    author = models.ForeignKey(User, on_delete = models.CASCADE)
+    topic = models.CharField(max_length=255)
+    text = models.CharField(max_length=1000)
+    date = models.DateTimeField('date')
+    category = models.ForeignKey( PostCategory, on_delete = models.CASCADE )
 
-	def __str__(self):
-		return self.topic
+    def __str__(self):
+        return self.topic
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete = models.CASCADE)
+    text = models.CharField(max_length=1000)
+    date = models.DateTimeField('date')
+    forumpost = models.ForeignKey(ForumPost, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.author) + '\'s comment on ' + str(self.forumpost)
