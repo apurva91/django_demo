@@ -1,13 +1,29 @@
 from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse, Http404
 from .models import ForumPost, PostCategory
-from .forms import PostForm
-from django.db.models import Q
+from .forms import PostForm, SignUpForm
 # Create your views here.
+
+def SignUp(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form = SignUpForm()
+    return render(request, 'forum/signup.html', {'form': form})
+
 
 def Index(request):
 	latest_posts=ForumPost.objects.order_by('-date')
