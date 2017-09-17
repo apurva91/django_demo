@@ -34,7 +34,7 @@ class ForumPost(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete = models.CASCADE)
-    text = models.CharField(max_length=1000)
+    comment = models.CharField(max_length=1000)
     date = models.DateTimeField('date')
     forumpost = models.ForeignKey(ForumPost, on_delete=models.CASCADE)
     def __str__(self):

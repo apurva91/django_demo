@@ -1,9 +1,10 @@
 {% extends 'forum/base.html' %}
 
 {% block content %}
-
     {% for fp in latest_posts_in_cat %}
     Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
+    <br>
+    <b> By: </b> {{fp.author}}
     <br>Posted On : {{fp.date}} 
  	<hr> 
     {% endfor %}

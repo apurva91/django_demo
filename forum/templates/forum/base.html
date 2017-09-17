@@ -22,7 +22,7 @@
 		</div>
 		<div class="col-xs-3">
 {%if user.is_authenticated%}
-Hello <a href="/accounts/profile/"> {{user.first_name}} {{user.last_name}} </a> <a class="btn btn-default" href="/logout">Logout</a>
+Hello <a href="/profile/{{user}}"> {{user.first_name}} {{user.last_name}} </a> <a class="btn btn-default" href="/logout">Logout</a>
 {%else%}
 <a class="btn btn-default" href="/signup">Sign Up</a> &nbsp; &nbsp; <a class="btn btn-default" href="/login">Log In </a>
 {%endif%}

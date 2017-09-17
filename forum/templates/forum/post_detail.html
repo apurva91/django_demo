@@ -11,14 +11,31 @@
 <br>
 {%endwith%}
 <br>
-<div class="comments container">
-{%for com in current_post_comments%}
-<p>
-By: {{com.author}}
-On: {{com.date}}
+{%if user.is_authenticated%}
+Add A Comment
+<form method="POST" class="post-form">{% csrf_token %}
+	{{ form }}
+	<button type="submit" class="save btn btn-default">Post It!</button>
+</form>
+{%else%}
+To Add A Comment Log In First
+{%endif%}
 <br>
-{{com.text}}
-</p>
-{%endfor%}
+
+
+<div class="comments container">
+	{%ifequal current_post_comments.count 0%}
+	No Comments Till Now
+	{%else%}
+	Comments
+	{%for com in current_post_comments%}
+	<p>
+		By: {{com.author}}
+		On: {{com.date}}
+		<br>
+		{{com.comment}}
+	</p>
+	{%endfor%}
+	{%endifequal%}
 </div>	
 {%endblock%}

@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,7 +8,8 @@ from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse, Http404
 from .models import ForumPost, PostCategory, Comment
-from .forms import PostForm, SignUpForm
+from .forms import PostForm, SignUpForm, CommentForm
+from django.contrib.auth.models import User
 # Create your views here.
 
 def SignUp(request):
@@ -41,14 +43,39 @@ def Index(request):
 		# If page is out of range (e.g. 9999), deliver last page of results.
 		latest_posts = paginator.page(paginator.num_pages)
 
+	if request.user.is_authenticated:
+	
+		if request.method=='POST':
+			form = PostForm(request.POST)
+			if form.is_valid():
+				post = form.save(commit=False)
+				post.date = timezone.now()
+				post.author = request.user
+				post.save()
+				return redirect('/posts/'+str(post.id))
+		else:
+			form = PostForm()
 
-	return render(request, 'forum/index.html', {'latest_posts':latest_posts})
+	return render(request, 'forum/index.html', {'latest_posts':latest_posts, 'form':form})
 
 def PostDetail(request,post_id):
 
 	current_post = get_object_or_404(ForumPost, pk=post_id)
 	current_post_comments = Comment.objects.filter(forumpost=current_post.id).order_by('-date')
-	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments})
+	if request.user.is_authenticated:
+		if request.method=='POST':
+			form = CommentForm(request.POST)
+			if form.is_valid():
+				comment = form.save(commit=False)
+				comment.date = timezone.now()
+				comment.author = request.user
+				comment.forumpost = current_post
+				comment.save()
+				return redirect('/posts/'+str(current_post.id))
+		else:
+			form = CommentForm()
+	
+	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,})
 
 def CategoryIndex(request, category):
 
@@ -61,10 +88,8 @@ def CategoryIndex(request, category):
 	try:
 		latest_posts_in_cat = paginator.page(page)
 	except PageNotAnInteger:
-		# If page is not an integer, deliver first page.
 		latest_posts_in_cat = paginator.page(1)
 	except EmptyPage:
-		# If page is out of range (e.g. 9999), deliver last page of results.
 		latest_posts_in_cat = paginator.page(paginator.num_pages)
 
 
@@ -74,20 +99,7 @@ def CategoryIndex(request, category):
 #	query=ForumPost.objects.filter(Q(text__search=que) | Q(topic__search=que)).order_by('-date')
 #	return HttpResponse(query.count())
 
-def NewPost(request):
-	if request.user.is_authenticated:
-		
-		if request.method=='POST':
-			form = PostForm(request.POST)
-			if form.is_valid():
-				post = form.save(commit=False)
-				post.date = timezone.now()
-				post.author = user
-				post.save()
-				return redirect('/posts/'+str(post.id))
-		else:
-			form = PostForm()
-
-		return render(request, 'forum/post_edit.html', {'form': form})
-	else:
-		return render(request, 'forum/login')
+def Profile(request,user):
+	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
+	user_data=User.objects.filter(username=user).get()
+	return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})

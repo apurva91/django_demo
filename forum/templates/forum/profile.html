@@ -1,0 +1,18 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+{%with user_data as ud%}
+<b>Name :</b>{{ud.first_name}} {{ud.last_name}}
+
+{%endwith%}
+<br>
+{{user_data.first_name}} has posted {{user_post.count}} posts.
+<br>
+{% for fp in user_post %}
+Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
+<br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
+<br>Posted On : {{fp.date}} 
+<hr> 
+{% endfor %}
+
+{%endblock%}
