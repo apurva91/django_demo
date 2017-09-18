@@ -5,9 +5,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class PostForm(forms.ModelForm):
-    class Meta:
-        model = ForumPost
-        fields = ('topic', 'text','category')
+	text = forms.CharField(widget=forms.Textarea(attrs={'rows':'5', 'cols':'50','overflow-y':'scroll'}))
+	class Meta:
+		model = ForumPost
+		fields = ('topic', 'text','category')
 
 
 class SignUpForm(UserCreationForm):
@@ -23,3 +24,4 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
 		fields = ('comment',)
+

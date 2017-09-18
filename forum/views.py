@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,8 +9,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse, Http404
 from .models import ForumPost, PostCategory, Comment
-from .forms import PostForm, SignUpForm, CommentForm
-from django.contrib.auth.models import User
+from .forms import PostForm, SignUpForm, CommentForm#, #SearchForm
 # Create your views here.
 
 def SignUp(request):
@@ -55,7 +55,8 @@ def Index(request):
 				return redirect('/posts/'+str(post.id))
 		else:
 			form = PostForm()
-
+	else:
+		form = 'blank'
 	return render(request, 'forum/index.html', {'latest_posts':latest_posts, 'form':form})
 
 def PostDetail(request,post_id):
@@ -74,12 +75,13 @@ def PostDetail(request,post_id):
 				return redirect('/posts/'+str(current_post.id))
 		else:
 			form = CommentForm()
-	
+	else:
+		form='blank'
 	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,})
 
 def CategoryIndex(request, category):
 
-	latest_posts_in_cat=ForumPost.objects.filter(category__url=category).order_by('-date')[:5]
+	latest_posts_in_cat=ForumPost.objects.filter(category__url=category).order_by('-date')
 	if latest_posts_in_cat.count()==0:
 		raise Http404("Category Not Found")
 	paginator = Paginator(latest_posts_in_cat, 5) # Show 25 contacts per page
@@ -95,9 +97,20 @@ def CategoryIndex(request, category):
 
 	return render(request, 'forum/category_index.html', {'latest_posts_in_cat':latest_posts_in_cat})
 
-#def SearchForum(request, que):
-#	query=ForumPost.objects.filter(Q(text__search=que) | Q(topic__search=que)).order_by('-date')
-#	return HttpResponse(query.count())
+def SearchForum(request):
+	que = request.GET.get('q')
+	query=ForumPost.objects.filter(Q(text__contains=que)|Q(topic__contains=que)).order_by('-date')
+	paginator = Paginator(query, 5) # Show 25 contacts per page
+
+	page = request.GET.get('page')
+	try:
+		query = paginator.page(page)
+	except PageNotAnInteger:
+		query = paginator.page(1)
+	except EmptyPage:
+		query = paginator.page(paginator.num_pages)
+
+	return render(request,'forum/search.html',{'query':query, 'que':que})
 
 def Profile(request,user):
 	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]

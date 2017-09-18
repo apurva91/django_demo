@@ -8,6 +8,6 @@ urlpatterns = [
 	url(r'^category/(?P<category>([\w-])+)/$',views.CategoryIndex, name='category_index'),
 	url(r'^signup/$', views.SignUp, name='signup'),
 	url(r'^profile/(?P<user>([\wd._-])+)/$', views.Profile, name='profile'),
+	url(r'^search/$', views.SearchForum, name='forum_search'),
 
-	#url(r'^search/(?P<que>([\wd-])+)/$', views.SearchForum, name='forum_search'),
 ]

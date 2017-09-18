@@ -1,0 +1,32 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+
+<br>
+<h2> Posts Containing "{{que}}" </h2>
+{% for fp in query %}
+Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
+<br>
+<b> By: </b> <a href="/profile/{{fp.author}}">{{fp.author}}</a>
+<br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
+<br>Posted On : {{fp.date}}
+<hr> 
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if query.has_previous %}
+            <a href="?page={{ query.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ query.number }} of {{ query.paginator.num_pages }}.
+        </span>
+
+        {% if query.has_next %}
+            <a href="?page={{ query.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

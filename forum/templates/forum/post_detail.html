@@ -4,7 +4,8 @@
 
 {% with current_post as cp%}
 <h1>{{cp.topic}}</h1>
-<b> By: </b> {{cp.author}}
+<b> By: </b> <a href="/profile/{{cp.author}}">{{cp.author}}</a>
+
 <b> Posted on :</b> {{cp.date}}
 <p>{{cp.text}}</p>
 <b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
@@ -30,7 +31,8 @@ To Add A Comment Log In First
 	Comments
 	{%for com in current_post_comments%}
 	<p>
-		By: {{com.author}}
+		<b> By: </b> <a href="/profile/{{com.author}}">{{com.author}}</a>
+
 		On: {{com.date}}
 		<br>
 		{{com.comment}}

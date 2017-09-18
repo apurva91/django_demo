@@ -17,7 +17,7 @@
 {% for fp in latest_posts %}
 Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
 <br>
-<b> By: </b> {{fp.author}}
+<b> By: </b> <a href="/profile/{{fp.author}}">{{fp.author}}</a>
 <br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
 <br>Posted On : {{fp.date}} 
 <hr> 
