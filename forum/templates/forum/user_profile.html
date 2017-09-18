@@ -1,0 +1,22 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+{%with user_data as ud%}
+<h1> <b>Welcome </b>{{ud.first_name}} {{ud.last_name}}</h1>
+{%endwith%}
+<br>
+You have posted {{user_post.count}} post(s).
+<br>
+<form method="POST" class="post-form">{% csrf_token %}
+{{form}}
+        <button type="submit" class="save btn btn-default">Post It!</button>
+</form>
+
+{% for fp in user_post %}
+Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
+<br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
+<br>Posted On : {{fp.date}} 
+<hr> 
+{% endfor %}
+
+{%endblock%}

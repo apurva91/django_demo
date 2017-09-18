@@ -7,8 +7,7 @@ Todo's
  - [x] To Make Profile Page
  - [x] To Make Search Functionality
  - [ ] To Make 'Did You Mean' in search
- - [ ] To Make Profile Page of Logged In User
- - [ ] To Make Post Editable and Deletable By The User
+ - [ ] To Make Post Editable and Deletable By The User(1/2way)
  - [ ] To Make Chat Functionality
  - [ ] To Make UI(Basic Bootstap UI is Ready)
  

@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse, Http404
 from .models import ForumPost, PostCategory, Comment
-from .forms import PostForm, SignUpForm, CommentForm#, #SearchForm
+from .forms import PostForm, SignUpForm, CommentForm, EditProfileForm
 # Create your views here.
 
 def SignUp(request):
@@ -28,7 +28,6 @@ def SignUp(request):
         form = SignUpForm()
     return render(request, 'forum/signup.html', {'form': form})
 
-
 def Index(request):
 	latest_posts=ForumPost.objects.order_by('-date')
 	paginator = Paginator(latest_posts, 5) # Show 25 contacts per page
@@ -42,9 +41,8 @@ def Index(request):
 	except EmptyPage:
 		# If page is out of range (e.g. 9999), deliver last page of results.
 		latest_posts = paginator.page(paginator.num_pages)
-
+	#Adding New Posts Should be only available to users
 	if request.user.is_authenticated:
-	
 		if request.method=='POST':
 			form = PostForm(request.POST)
 			if form.is_valid():
@@ -55,9 +53,9 @@ def Index(request):
 				return redirect('/posts/'+str(post.id))
 		else:
 			form = PostForm()
+		return render(request, 'forum/index.html', {'latest_posts':latest_posts, 'form':form})
 	else:
-		form = 'blank'
-	return render(request, 'forum/index.html', {'latest_posts':latest_posts, 'form':form})
+		return render(request, 'forum/index.html', {'latest_posts':latest_posts})
 
 def PostDetail(request,post_id):
 
@@ -77,6 +75,23 @@ def PostDetail(request,post_id):
 			form = CommentForm()
 	else:
 		form='blank'
+	 # if request.user==current_post.author:
+		# if request.method=='POST':
+		# 	if request.POST.get('Edit'):
+		# 		form2 = PostForm(request.POST,instance=current_post)
+		# 		if form2.is_valid():
+		# 			current_post = form.save()
+		# 			current_post.save()
+		# 			return redirect('/')
+		# 	else:
+		# 		form2 = PostForm(initial={'topic':current_post.topic,'text':current_post.text,'category':current_post.category,})
+			
+
+
+		# 	elif request.POST.get('Delete'):
+		# 		ForumPost.objects.filter(pk=post_id).delete();
+		# 		return redirect('/profile/apurva') 
+
 	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,})
 
 def CategoryIndex(request, category):
@@ -113,6 +128,30 @@ def SearchForum(request):
 	return render(request,'forum/search.html',{'query':query, 'que':que})
 
 def Profile(request,user):
-	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
-	user_data=User.objects.filter(username=user).get()
-	return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
+	try :
+		user_data=User.objects.filter(username=user).get()
+	except User.DoesNotExist:
+		raise Http404("User Not Found")
+	
+	if request.user.is_authenticated:
+		r_user_data=User.objects.filter(username=request.user).get()
+	else:
+		raise Http404("You Must LogIn To View Profile")
+	
+	if user_data.id==r_user_data.id:
+	 	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
+	 	
+	 	if request.method=='POST':
+			form = EditProfileForm(request.POST,instance=user_data)
+		
+			if form.is_valid():
+				user_data = form.save()
+				user_data.save()
+				return redirect('/profile/'+str(user))
+		else:
+			form = EditProfileForm(initial={'first_name': user_data.first_name,'last_name': user_data.last_name,'email': user_data.email,})
+		return render(request, 'forum/user_profile.html', {'user_post':user_post,'user_data':user_data, 'form':form})
+	else:
+		user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
+		return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
+

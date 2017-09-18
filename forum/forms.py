@@ -20,6 +20,14 @@ class SignUpForm(UserCreationForm):
 		model = User
 		fields=('username','first_name','last_name','birth_date','email','password1','password2',)
 
+class EditProfileForm(forms.ModelForm):
+	first_name=forms.CharField(max_length=25)
+	last_name=forms.CharField(max_length=25)
+	email=forms.EmailField(max_length=100)
+	class Meta:
+		model = User
+		fields=('first_name','last_name','email',)
+
 class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment

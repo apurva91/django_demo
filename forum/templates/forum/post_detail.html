@@ -22,6 +22,15 @@ Add A Comment
 To Add A Comment Log In First
 {%endif%}
 <br>
+{%if user.is_authenticated%}
+{%ifequal user current_post.author%}
+<form method="POST" class="post-form">{% csrf_token %}
+{{form2}}
+	<input type="submit" value="Edit" class="save btn btn-primary" name="Edit">
+	<input type="submit" value="Delete" class="save btn btn-danger" name="Delete">
+</form>
+{%endifequal%}
+{%endif%}
 
 
 <div class="comments container">
