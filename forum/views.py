@@ -62,7 +62,8 @@ def PostDetail(request,post_id):
 	current_post = get_object_or_404(ForumPost, pk=post_id)
 	current_post_comments = Comment.objects.filter(forumpost=current_post.id).order_by('-date')
 	if request.user.is_authenticated:
-		if request.method=='POST':
+		if request.method == 'POST':
+			if ''
 			form = CommentForm(request.POST)
 			if form.is_valid():
 				comment = form.save(commit=False)
@@ -71,26 +72,31 @@ def PostDetail(request,post_id):
 				comment.forumpost = current_post
 				comment.save()
 				return redirect('/posts/'+str(current_post.id))
+		if 'Delete' in request.POST:
 		else:
 			form = CommentForm()
-	else:
-		form='blank'
-	 # if request.user==current_post.author:
-		# if request.method=='POST':
-		# 	if request.POST.get('Edit'):
-		# 		form2 = PostForm(request.POST,instance=current_post)
-		# 		if form2.is_valid():
-		# 			current_post = form.save()
-		# 			current_post.save()
-		# 			return redirect('/')
-		# 	else:
-		# 		form2 = PostForm(initial={'topic':current_post.topic,'text':current_post.text,'category':current_post.category,})
 			
 
+    			bannedphraseform = BannedPhraseForm(request.POST, prefix='delete')
+   	 		if bannedphraseform.is_valid():
+            	bannedphraseform.save()
+        		expectedphraseform = ExpectedPhraseForm(prefix='expected')
+    		elif 'expectedphrase' in request.POST:
+        		expectedphraseform = ExpectedPhraseForm(request.POST, prefix='expected')
+        	if expectedphraseform.is_valid():
+            	expectedphraseform.save() 
+        		bannedphraseform = BannedPhraseForm(prefix='banned')
+			else:
+			    bannedphraseform = BannedPhraseForm(prefix='banned')
+			    expectedphraseform = ExpectedPhraseForm(prefix='expected')
 
-		# 	elif request.POST.get('Delete'):
-		# 		ForumPost.objects.filter(pk=post_id).delete();
-		# 		return redirect('/profile/apurva') 
+	else:
+		form='blank'
+	if request.user==current_post.author:
+		if request.method=='POST':
+			elif request.POST.get('Delete'):
+			ForumPost.objects.filter(pk=post_id).delete();
+			return redirect('/profile/'+str(current_post.author)) 
 
 	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,})
 
@@ -154,4 +160,15 @@ def Profile(request,user):
 	else:
 		user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
 		return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
+
+# if request.POST.get('Edit'):
+# 				form2 = PostForm(request.POST,instance=current_post)
+# 				if form2.is_valid():
+# 					current_post = form.save()
+# 					current_post.save()
+# 					return redirect('/')
+# 			else:
+# 				form2 = PostForm(initial={'topic':current_post.topic,'text':current_post.text,'category':current_post.category,})
+			
+
 

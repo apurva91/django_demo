@@ -16,7 +16,7 @@
 Add A Comment
 <form method="POST" class="post-form">{% csrf_token %}
 	{{ form }}
-	<button type="submit" class="save btn btn-default">Post It!</button>
+	<button type="submit" value='Comment' name='Comment' class="save btn btn-default">Post It!</button>
 </form>
 {%else%}
 To Add A Comment Log In First
