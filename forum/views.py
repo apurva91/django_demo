@@ -60,52 +60,38 @@ def Index(request):
 def PostDetail(request,post_id):
 
 	current_post = get_object_or_404(ForumPost, pk=post_id)
+	form = CommentForm()
+	form2 = PostForm(initial={'topic':current_post.topic,'text':current_post.text,'category':current_post.category,})
 	current_post_comments = Comment.objects.filter(forumpost=current_post.id).order_by('-date')
 	if request.user.is_authenticated:
 		if request.method == 'POST':
-			if ''
-			form = CommentForm(request.POST)
-			if form.is_valid():
-				comment = form.save(commit=False)
-				comment.date = timezone.now()
-				comment.author = request.user
-				comment.forumpost = current_post
-				comment.save()
-				return redirect('/posts/'+str(current_post.id))
-		if 'Delete' in request.POST:
-		else:
-			form = CommentForm()
+			if 'Comment' in request.POST:
+				form = CommentForm(request.POST)
+				if form.is_valid():
+					comment = form.save(commit=False)
+					comment.date = timezone.now()
+					comment.author = request.user
+					comment.forumpost = current_post
+					comment.save()
+					return redirect('/posts/'+str(current_post.id))
+			elif 'Delete' in request.POST:
+				ForumPost.objects.filter(pk=post_id).delete()
+				return redirect('/profile/'+str(current_post.author))
+			elif 'Edit' in request.POST:
+				form2 = PostForm(request.POST,instance=current_post)
+				if form2.is_valid():
+					current_post = form2.save()
+					current_post.save()
+					return redirect('/posts/'+str(current_post.id))
 			
-
-    			bannedphraseform = BannedPhraseForm(request.POST, prefix='delete')
-   	 		if bannedphraseform.is_valid():
-            	bannedphraseform.save()
-        		expectedphraseform = ExpectedPhraseForm(prefix='expected')
-    		elif 'expectedphrase' in request.POST:
-        		expectedphraseform = ExpectedPhraseForm(request.POST, prefix='expected')
-        	if expectedphraseform.is_valid():
-            	expectedphraseform.save() 
-        		bannedphraseform = BannedPhraseForm(prefix='banned')
-			else:
-			    bannedphraseform = BannedPhraseForm(prefix='banned')
-			    expectedphraseform = ExpectedPhraseForm(prefix='expected')
-
-	else:
-		form='blank'
-	if request.user==current_post.author:
-		if request.method=='POST':
-			elif request.POST.get('Delete'):
-			ForumPost.objects.filter(pk=post_id).delete();
-			return redirect('/profile/'+str(current_post.author)) 
-
-	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,})
+	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,'form2':form2,})
 
 def CategoryIndex(request, category):
 
 	latest_posts_in_cat=ForumPost.objects.filter(category__url=category).order_by('-date')
 	if latest_posts_in_cat.count()==0:
 		raise Http404("Category Not Found")
-	paginator = Paginator(latest_posts_in_cat, 5) # Show 25 contacts per page
+	paginator = Paginator(latest_posts_in_cat, 5)
 
 	page = request.GET.get('page')
 	try:
@@ -114,7 +100,6 @@ def CategoryIndex(request, category):
 		latest_posts_in_cat = paginator.page(1)
 	except EmptyPage:
 		latest_posts_in_cat = paginator.page(paginator.num_pages)
-
 
 	return render(request, 'forum/category_index.html', {'latest_posts_in_cat':latest_posts_in_cat})
 
@@ -160,15 +145,4 @@ def Profile(request,user):
 	else:
 		user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
 		return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
-
-# if request.POST.get('Edit'):
-# 				form2 = PostForm(request.POST,instance=current_post)
-# 				if form2.is_valid():
-# 					current_post = form.save()
-# 					current_post.save()
-# 					return redirect('/')
-# 			else:
-# 				form2 = PostForm(initial={'topic':current_post.topic,'text':current_post.text,'category':current_post.category,})
-			
-
 

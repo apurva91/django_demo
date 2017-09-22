@@ -9,7 +9,7 @@ You have posted {{user_post.count}} post(s).
 <br>
 <form method="POST" class="post-form">{% csrf_token %}
 {{form}}
-        <button type="submit" class="save btn btn-default">Post It!</button>
+<button type="submit" class="save btn btn-default">Post It!</button>
 </form>
 
 {% for fp in user_post %}
