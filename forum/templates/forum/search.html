@@ -7,6 +7,8 @@
 {% for fp in query %}
 Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
 <br>
+{{fp.text|truncatewords:5}}
+<br>
 <b> By: </b> <a href="/profile/{{fp.author}}">{{fp.author}}</a>
 <br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
 <br>Posted On : {{fp.date}}

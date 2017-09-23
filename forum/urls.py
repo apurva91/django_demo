@@ -12,5 +12,7 @@ urlpatterns = [
 	url(r'^messages/(?P<reciever>([\wd._-])+)/$',views.SendShowMsg, name='messages'),
 	url(r'^messages/$',views.MsgIndex, name='msgindex'),
 	url(r'^messager/$',views.MsgIRefresh, name='msgre'),
+	url(r'^messagec/$',views.MsgCount, name='msgco'),
 	url(r'^messages/(?P<reciever>([\wd._-])+)/refresh$',views.MsgRefresh, name='remsg'),
+
 ]

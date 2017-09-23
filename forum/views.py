@@ -11,6 +11,7 @@ from django.http import HttpResponse, Http404, JsonResponse
 from .models import ForumPost, PostCategory, Comment, Messages, LastMsg
 from .forms import PostForm, SignUpForm, CommentForm, EditProfileForm, MessageForm
 # Create your views here.
+import json
 import logging
 logger = logging.getLogger(__name__)
 # import the logging library, Log an error message
@@ -160,6 +161,10 @@ def SendShowMsg(request,reciever):
 	else:
 		raise Http404("You Must LogIn To View Profile")
 	all_msg = Messages.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date')
+	lastmsg=LastMsg.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date').first()
+	if lastmsg.user1 != sender:
+		lastmsg.msg_read=1
+		lastmsg.save()
 	form = MessageForm()
 	if request.method=='POST':
 		form = MessageForm(request.POST)
@@ -169,12 +174,12 @@ def SendShowMsg(request,reciever):
 			newmessage.user1 = sender
 			newmessage.user2 = reciever
 			newmessage.save()
-			lastmsg=LastMsg.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date').first()
 			if lastmsg:
 				lastmsg.date=newmessage.date
 				lastmsg.user1 = sender
 				lastmsg.user2 = reciever
 				lastmsg.message=newmessage.message
+				lastmsg.msg_read = 0
 				lastmsg.save()
 			else :
 				lastmsg=LastMsg.objects.create(user1=sender,user2=reciever,message=newmessage.message,date=newmessage.date)
@@ -186,21 +191,23 @@ def MsgRefresh(request,reciever):
 	reciever=User.objects.filter(username=reciever).get()
 	sender=User.objects.filter(username=request.user).get()
 	all_msg = Messages.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date')
+	lastmsg = LastMsg.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).first()
+	if lastmsg.user1 != sender:
+		lastmsg.msg_read = 1
+		lastmsg.save()
 	msg_json = serializers.serialize('json', all_msg)
 	return JsonResponse(msg_json,safe=False)
 	#return HttpResponse(all_msg)
-
-
 
 def MsgIndex(request):
 	if request.user.is_authenticated:
 		sender=User.objects.filter(username=request.user).get()
 	else:
 		raise Http404("You Must Login First")
-
 	all_msg= LastMsg.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
 	#all_msg = Messages.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
 	return render(request,'forum/msgindex.html',{'all_msg':all_msg})
+
 def MsgIRefresh(request):
 	if request.user.is_authenticated:
 		sender=User.objects.filter(username=request.user).get()
@@ -208,6 +215,20 @@ def MsgIRefresh(request):
 		raise Http404("You Must Login First")
 
 	all_msg= LastMsg.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
-	msg_json = serializers.serialize('json', all_msg)
-	return JsonResponse(msg_json, safe=False)
+	array=[]
+	for item in all_msg:
+		if item.user1.id == request.user.id:
+			it = item.user2.id
+		else :
+			it = item.user1.id
+		array.append(User.objects.get(id=it))
 
+	obj = {
+		'user' : serializers.serialize('json',array),
+		'msg' : serializers.serialize('json', all_msg)
+	}
+	return JsonResponse(obj, safe=False)
+
+def MsgCount(request):
+	msg_count = LastMsg.objects.filter(Q(user2=request.user)&Q(msg_read=0)).count()
+	return HttpResponse(msg_count)

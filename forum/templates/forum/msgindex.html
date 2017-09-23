@@ -10,11 +10,15 @@
 			url: '/messager',
 			success: function(data) {
 
-				x = JSON.parse(data);
+				x = data;
+				msg = JSON.parse(x.msg);
 				var htm='';
-				for(var i=0; i<x.length; i++){
-					if(id == x[i]['fields']['user1']) htm+='<h3>'+x[i]['fields']['user2']+'</h3><p> <i class="fa fa-arrow-right" aria-hidden="true"></i>'+x[i]['fields']['message']+'</p>';
-					else  htm+='<h3>'+x[i]['fields']['user2']+'</h3><p> <i class="fa fa-arrow-left" aria-hidden="true"></i> '+x[i]['fields']['message']+'</p>';
+				user = JSON.parse(x.user);
+				for(var i=0; i<msg.length; i++){
+					if(!msg[i].fields.msg_read && msg[i].fields.user2==id)htm+='<h3><a href="/messages/'+user[i].fields.username+'">'+user[i].fields.username+'</a> <i class="fa fa-exclamation" style="color:red" aria-hidden="true"></i></h3>';
+						else htm+='<h3><a href="/messages/'+user[i].fields.username+'">'+user[i].fields.username+'</a><i class="fa fa-check" style="color:green" aria-hidden="true"></i></h3>';
+					if(msg[i].fields.user1 == user[i].pk) htm+='<p> <i class="fa fa-arrow-right" aria-hidden="true"></i>'+msg[i]['fields']['message']+'</p>';
+					else  htm+='<p><i class="fa fa-arrow-left" aria-hidden="true"></i> '+msg[i]['fields']['message']+'</p>';
 				}
 				$('.msgclass').html(htm);
 			},
@@ -22,9 +26,9 @@
 				console.log('Ajax Error');
 			}
 
-				//console.log('doing');
 			});
 	}
+	
 
 	$(function(){
 		refresh();

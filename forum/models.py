@@ -63,6 +63,7 @@ class LastMsg(models.Model):
     user2 = models.ForeignKey(  User, on_delete=models.CASCADE, related_name='lreciever')
     date = models.DateTimeField('date')
     message = models.CharField(max_length=1000)
+    msg_read = models.BooleanField()
     def __str__(self):
         return self.user1
     def __unicode__(self):
@@ -75,3 +76,5 @@ class LastMsg(models.Model):
         return self.message
     def __unicode__(self):    
         return self.message
+    def __str__(self):
+        return self.msg_read
