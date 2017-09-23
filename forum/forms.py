@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ForumPost, Comment
+from .models import ForumPost, Comment, Messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -32,3 +32,8 @@ class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
 		fields = ('comment',)
+
+class MessageForm(forms.ModelForm):
+	class Meta:
+		model = Messages
+		fields = ('message',)

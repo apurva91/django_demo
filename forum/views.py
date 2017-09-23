@@ -1,16 +1,20 @@
 from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
-
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.utils import timezone
-from django.http import HttpResponse, Http404
-from .models import ForumPost, PostCategory, Comment
-from .forms import PostForm, SignUpForm, CommentForm, EditProfileForm
+from django.core import serializers
+from django.http import HttpResponse, Http404, JsonResponse
+from .models import ForumPost, PostCategory, Comment, Messages, LastMsg
+from .forms import PostForm, SignUpForm, CommentForm, EditProfileForm, MessageForm
 # Create your views here.
+import logging
+logger = logging.getLogger(__name__)
+# import the logging library, Log an error message
+#logger.error('Something went wrong!')
 
 def SignUp(request):
     if request.method == 'POST':
@@ -83,7 +87,7 @@ def PostDetail(request,post_id):
 					current_post = form2.save()
 					current_post.save()
 					return redirect('/posts/'+str(current_post.id))
-			
+
 	return render(request,'forum/post_detail.html',{'current_post':current_post, 'current_post_comments':current_post_comments, 'form':form,'form2':form2,})
 
 def CategoryIndex(request, category):
@@ -145,4 +149,65 @@ def Profile(request,user):
 	else:
 		user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
 		return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
+
+def SendShowMsg(request,reciever):
+	try :
+		reciever=User.objects.filter(username=reciever).get()
+	except User.DoesNotExist:
+		raise Http404("User Not Found")
+	if request.user.is_authenticated:
+		sender=User.objects.filter(username=request.user).get()
+	else:
+		raise Http404("You Must LogIn To View Profile")
+	all_msg = Messages.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date')
+	form = MessageForm()
+	if request.method=='POST':
+		form = MessageForm(request.POST)
+		if form.is_valid():
+			newmessage = form.save(commit=False)
+			newmessage.date = timezone.now()
+			newmessage.user1 = sender
+			newmessage.user2 = reciever
+			newmessage.save()
+			lastmsg=LastMsg.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date').first()
+			if lastmsg:
+				lastmsg.date=newmessage.date
+				lastmsg.user1 = sender
+				lastmsg.user2 = reciever
+				lastmsg.message=newmessage.message
+				lastmsg.save()
+			else :
+				lastmsg=LastMsg.objects.create(user1=sender,user2=reciever,message=newmessage.message,date=newmessage.date)
+			return redirect('/messages/'+str(reciever))
+
+	return render(request,'forum/message.html',{'reciever':reciever,'form':form,'all_msg':all_msg})
+
+def MsgRefresh(request,reciever):
+	reciever=User.objects.filter(username=reciever).get()
+	sender=User.objects.filter(username=request.user).get()
+	all_msg = Messages.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date')
+	msg_json = serializers.serialize('json', all_msg)
+	return JsonResponse(msg_json,safe=False)
+	#return HttpResponse(all_msg)
+
+
+
+def MsgIndex(request):
+	if request.user.is_authenticated:
+		sender=User.objects.filter(username=request.user).get()
+	else:
+		raise Http404("You Must Login First")
+
+	all_msg= LastMsg.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
+	#all_msg = Messages.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
+	return render(request,'forum/msgindex.html',{'all_msg':all_msg})
+def MsgIRefresh(request):
+	if request.user.is_authenticated:
+		sender=User.objects.filter(username=request.user).get()
+	else:
+		raise Http404("You Must Login First")
+
+	all_msg= LastMsg.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
+	msg_json = serializers.serialize('json', all_msg)
+	return JsonResponse(msg_json, safe=False)
 

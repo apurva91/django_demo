@@ -1,5 +1,6 @@
-# django_demo
+# forum_django
 This is demo site Django website having a type of forum
+
 Todo's
  - [x] To Make Forum Posts
  - [x] To Make Commenting
@@ -7,7 +8,10 @@ Todo's
  - [x] To Make Profile Page
  - [x] To Make Search Functionality
  - [x] To Make Post Editable and Deletable By The User
- - [ ] To Make Chat Functionality
+ - [x] To Make Chat Functionality
+ - [ ] TO add links in chat
+ - [ ] Add comments of comments
+
 
 Low Priority
  - [ ] To extend User Model To add birthdate, profile picture, etc
@@ -16,6 +20,7 @@ Low Priority
 
 Task
 A discussions portal with the following features :-
+
 ~~User login*~~
 1) ~~A platform for posting posts with categories (like relationship,studies etc)~~
 2) ~~Option of editing/deleting the post for the one who created it~~

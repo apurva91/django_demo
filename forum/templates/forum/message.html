@@ -1,0 +1,67 @@
+{% extends 'forum/base.html' %}
+
+{% block content %}
+
+<script>
+	var x;
+	var id = {{user.id}};
+	function refresh() {
+		$.ajax({
+			url: document.URL+'refresh',
+			success: function(data) {
+
+				x = JSON.parse(data);
+				var htm='';
+				for(var i=0; i<x.length; i++){
+					if(id == x[i]['fields']['user1']) htm+='<p style="text-align:right">'+x[i]['fields']['message']+'</p>';
+					else  htm+='<p style="text-align:left">'+x[i]['fields']['message']+'</p>';
+				}
+				$('.msgclass').html(htm);
+			},
+			error: function(){
+				console.log('Ajax Error');
+			}
+
+				//console.log('doing');
+			});
+	}
+
+	$(function(){
+		refresh();
+	});
+	refresh();
+	setInterval("refresh()", 1000);
+</script>
+
+
+<br>
+
+{%if not user.is_authenticated%}
+You need to login to use this feature, this is only for members.
+{%endif%}
+<h1><a href='/profile/{{reciever}}'>{{reciever}}</a></h1>
+<form method="POST" class="post-form">{% csrf_token %}
+	{{ form }}
+	<button type="submit" value='Message' name='Message' class="save btn btn-default">Message now</button>
+</form>
+<p class='msgclass' id='msgclass'>
+</p>
+
+<!-- 
+<div class="comments container">
+	{%ifequal current_post_comments.count 0%}
+	No Comments Till Now
+	{%else%}
+	Comments
+	{%for com in current_post_comments%}
+	<p>
+		<b> By: </b> <a href="/profile/{{com.author}}">{{com.author}}</a>
+
+		On: {{com.date}}
+		<br>
+		{{com.comment}}
+	</p>
+	{%endfor%}
+	{%endifequal%}
+</div>	
+-->{%endblock%}

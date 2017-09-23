@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>
@@ -10,31 +11,30 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body>
 	<div class="container-fluid" style="background-color:#f99443; ">
 		<div class="row">
-		<div class="col-xs-6">
-		<h1 ><a href="/" style="color:white">The Forum</a></h1>
-		</div>
-		<div class="col-xs-3">
-{%if user.is_authenticated%}
-Hello <a href="/profile/{{user}}"> {{user.first_name}} {{user.last_name}} </a> <a class="btn btn-default" href="/logout">Logout</a>
-{%else%}
-<a class="btn btn-default" href="/signup">Sign Up</a> &nbsp; &nbsp; <a class="btn btn-default" href="/login">Log In </a>
-{%endif%}
-		</div>
-		<div class="col-xs-3">
-<form id="searchform" action="/search/" method='get' accept-charset="utf-8">
-			<input class="form-control" id="searchbox" name="q" type="text" placeholder="Search">
-			<button class="btn btn-primary" type="submit">
-				<i class="fa fa-search"></i>
-			</button>
-		</form>
+			<div class="col-xs-6">
+				<h1 ><a href="/" style="color:white">The Forum</a></h1>
+			</div>
+			<div class="col-xs-3">
+				{%if user.is_authenticated%}
+				Hello <a href="/profile/{{user}}"> {{user.first_name}} {{user.last_name}} </a> <a class="btn btn-default" href="/logout">Logout</a>
+				{%else%}
+				<a class="btn btn-default" href="/signup">Sign Up</a> &nbsp; &nbsp; <a class="btn btn-default" href="/login">Log In </a>
+				{%endif%}
+			</div>
+			<div class="col-xs-3">
+				<form id="searchform" action="/search/"  method='get' accept-charset="utf-8">
+				<input class="form-control" id="searchbox" style="width:70%;float: left" name="q" type="text" placeholder="Search">
+					<button class="btn btn-primary" style="float: left" type="submit"><i class="fa fa-search"></i></button>
+		
+				</form>
 
-		</div>
+			</div>
 		</div>
 		
 	</div>
