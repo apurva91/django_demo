@@ -3,48 +3,75 @@
 {% block content %}
 
 {% with current_post as cp%}
-<h1>{{cp.topic}}</h1>
-<b> By: </b> <a href="/profile/{{cp.author}}">{{cp.author}}</a>
 
-<b> Posted on :</b> {{cp.date}}
-<p>{{cp.text}}</p>
-<b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
-<br>
-{%endwith%}
-<br>
-{%if user.is_authenticated%}
-Add A Comment
-<form method="POST" class="post-form">{% csrf_token %}
-	{{ form }}
-	<button type="submit" value='Comment' name='Comment' class="save btn btn-default">Post It!</button>
-</form>
-{%else%}
-To Add A Comment Log In First
-{%endif%}
-<br>
+<h1>{{cp.topic}} 
+
 {%if user.is_authenticated%}
 {%ifequal user current_post.author%}
-<form method="POST" class="post-form">{% csrf_token %}
-{{form2}}
-	<input type="submit" value="Edit" class="save btn btn-primary" name="Edit">
-	<input type="submit" value="Delete" class="save btn btn-danger" name="Delete">
-</form>
+<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">Edit/Delete <span class="glyphicon glyphicon-cog"></span></button> 
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Edit/Delete</h4>
+			</div>
+			<div class="modal-body">
+				<div class='input-group'>
+					<form method="POST" class="post-form">{% csrf_token %}
+						{{form2.as_p}}
+						<input type="submit" value="Edit" class="save btn btn-primary" name="Edit">
+						<input type="submit" value="Delete" class="save btn btn-danger" name="Delete">
+					</form>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
 {%endifequal%}
 {%endif%}
+</h1>
+
+<b> By: </b> <a href="/profile/{{cp.author}}">{{cp.author.first_name}} {{cp.author.last_name}}</a> &nbsp;&nbsp;|&nbsp;&nbsp; <b> Posted on :</b> {{cp.date}} &nbsp;&nbsp;|&nbsp;&nbsp; <b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
+
+<p>{{cp.text}}</p>
+{%endwith%}
+{%if user.is_authenticated%}
+<h3>Comments</h3>
+<form method="POST" class="post-form">{% csrf_token %}
+<div class='row'>
+	<div class='col-xs-6'>
+		{{form.as_p}}
+	</div>
+	<div class='col-xs-6' style='margin-top:5px;	'>
+	<br>
+		<input type="submit" value='Comment' name='Comment' class="save btn btn-default">	
+	</div>
+	</div>
+</form>
+{%else%}
+To Add A Comment <a href='login'>LogIn</a> First
+{%endif%}
+<br>
 
 
 <div class="comments container">
 	{%ifequal current_post_comments.count 0%}
-	No Comments Till Now
+	<h4>No Comments Till Now</h4>
 	{%else%}
-	Comments
+	<h3>User Comments:</h3>
 	{%for com in current_post_comments%}
-	<p>
-		<b> By: </b> <a href="/profile/{{com.author}}">{{com.author}}</a>
-
-		On: {{com.date}}
-		<br>
+	<p class='comments comment'>
 		{{com.comment}}
+		<br>
+		<b> By: </b> <a href="/profile/{{com.author}}">{{com.author.first_name}} {{com.author.last_name}}</a> &nbsp;&nbsp;|	&nbsp;&nbsp;<b>On:</b> {{com.date}}
 	</p>
 	{%endfor%}
 	{%endifequal%}

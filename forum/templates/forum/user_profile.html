@@ -1,5 +1,6 @@
 {% extends 'forum/base.html' %}
-
+{%block title%}Your Profile{%endblock%}
+{%block nav-profile%}class='active'{%endblock%}
 {% block content %}
 {%with user_data as ud%}
 <h1> <b>Welcome </b>{{ud.first_name}} {{ud.last_name}}</h1>

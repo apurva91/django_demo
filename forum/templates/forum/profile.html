@@ -1,5 +1,5 @@
 {% extends 'forum/base.html' %}
-
+{%block title%}Profile{%endblock%}
 {% block content %}
 {%with user_data as ud%}
 <b>Name :</b>{{ud.first_name}} {{ud.last_name}}
