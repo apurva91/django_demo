@@ -13,9 +13,10 @@
 
 				x = data;
 				msg = JSON.parse(x.msg);
-				var htm='';
+				var htm='<hr style=" width:90%; border:0.5px solid #c9c9c9">';
 				user = JSON.parse(x.user);
 				for(var i=0; i<msg.length; i++){
+					var g = msg[i]['fields']['message'].split(" ");
 					htm+='<p class="msgstyle"><h3><a href="/messages/'+user[i].fields.username+'" style="color:black; text-decoration: none;">'+user[i].fields.first_name + ' '+user[i].fields.last_name+'</a> <i class="'
 					if(!msg[i].fields.msg_read && msg[i].fields.user2==id) htm+='fa fa-exclamation" style="color:red" ';
 					else htm+='fa fa-check" style="color:green" ';
@@ -24,8 +25,10 @@
 					
 					if(msg[i].fields.user1 == user[i].pk) htm+='right" ';
 					else  htm+='left" ';
-
-					htm+= 'aria-hidden="true"></i> '+msg[i]['fields']['message']+'</p>';
+					htm+= 'aria-hidden="true"></i> '+g.splice(0,20).join(" ");
+					if(g.length>20) htm+=' ...</p><hr style=" width:90%; border:0.5px solid #c9c9c9	">';
+					else htm+='</p><hr style=" width:90%; border:0.5px solid #c9c9c9	">';
+					
 				}
 				$('.msgclass').html(htm);
 			},
@@ -50,6 +53,6 @@ You need to login to use this feature, this is only for members.
 {%endif%}
 <h1> Your Messages <span style="font-size:20px;">(<i class='fa fa-check' style="color:green;"></i> : Read & <i class='fa fa-exclamation' style="color:red;"></i> : Unread)</span></h1>
 <br>
-<p class='msgclass' id='msgclass'>
-</p>
+<div class='msgclass' id='msgclass'>
+</div>
 {%endblock%}

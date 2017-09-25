@@ -3,13 +3,13 @@
 {%block nav-signup%}class="active"{%endblock%}
 {% block content %}
 <script>
-  $( function() {
+/*  $( function() {
     $( "#datepicker" ).datepicker({
       dateFormat: 'yy-mm-dd',
       yearRange:'1900:2017',
     });
   } );
-  </script>
+*/  </script>
   <h2>Sign up</h2>
   <form method="post">
     {% csrf_token %}
@@ -25,6 +25,6 @@
         {% endfor %}
       </p>
     {% endfor %}
-    <button type="submit">Sign up</button>
+    <button type="submit" class='btn btn-success btn-lg'>Sign up</button>
   </form>
 {% endblock %}

@@ -13,8 +13,8 @@
 				x = JSON.parse(data);
 				var htm='';
 				for(var i=0; i<x.length; i++){
-					if(id == x[i]['fields']['user1']) htm+='<div class="row"> <div class="col-xs-4"></div><div class="col-xs-8"><p style="text-align:right; color:white; border-radius:5px; padding:2px; padding-right:6px; padding-left:6px; background-color:#0084ff; ">'+x[i]['fields']['message']+'</p></div></div>';
-					else  htm+='<div class="row"><div class="col-xs-8"><p style="text-align:left; border-radius:5px; padding:2px; background-color:#f1f0f0; padding-right:6px; padding-left:6px; ">'+x[i]['fields']['message']+'</p></div><div class="col-xs-4"></div></div>';
+					if(id == x[i]['fields']['user1']) htm+='<div class="row"> <div class="col-xs-4"></div><div class="col-xs-8"><p style="text-align:right; color:white; font-size:16px; border-radius:5px; padding:2px; padding-right:6px; padding-left:6px; background-color:#0084ff; ">'+x[i]['fields']['message']+'</p></div></div>';
+					else  htm+='<div class="row"><div class="col-xs-8"><p style="text-align:left; border-radius:5px; padding:2px; background-color:#f1f0f0; padding-right:6px; padding-left:6px; font-size:16px; ">'+x[i]['fields']['message']+'</p></div><div class="col-xs-4"></div></div>';
 				}
 				$('.msgclass1').html(htm);
 			},

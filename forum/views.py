@@ -94,6 +94,7 @@ def PostDetail(request,post_id):
 def CategoryIndex(request, category):
 
 	latest_posts_in_cat=ForumPost.objects.filter(category__url=category).order_by('-date')
+	cat = PostCategory.objects.get(url=category)
 	if latest_posts_in_cat.count()==0:
 		raise Http404("Category Not Found")
 	paginator = Paginator(latest_posts_in_cat, 5)
@@ -105,12 +106,11 @@ def CategoryIndex(request, category):
 		latest_posts_in_cat = paginator.page(1)
 	except EmptyPage:
 		latest_posts_in_cat = paginator.page(paginator.num_pages)
-
-	return render(request, 'forum/category_index.html', {'latest_posts_in_cat':latest_posts_in_cat})
+	return render(request, 'forum/category_index.html', {'category':cat,'latest_posts_in_cat':latest_posts_in_cat})
 
 def SearchForum(request):
 	que = request.GET.get('q')
-	query=ForumPost.objects.filter(Q(text__contains=que)|Q(topic__contains=que)).order_by('-date')
+	query=ForumPost.objects.filter(Q(text__icontains=que)|Q(topic__icontains=que)).order_by('-date')
 	paginator = Paginator(query, 5) # Show 25 contacts per page
 
 	page = request.GET.get('page')
@@ -231,8 +231,11 @@ def MsgIRefresh(request):
 	return JsonResponse(obj, safe=False)
 
 def MsgCount(request):
-	msg_count = LastMsg.objects.filter(Q(user2=request.user)&Q(msg_read=0)).count()
-	return HttpResponse(msg_count)
+	if request.user.is_authenticated:
+		msg_count = LastMsg.objects.filter(Q(user2=request.user)&Q(msg_read=0)).count()
+		return HttpResponse(msg_count)
+	else:
+		return HttpResponse(0)
 
 def handler404(request):
     response = render_to_response('404.html', {'exception':exception},

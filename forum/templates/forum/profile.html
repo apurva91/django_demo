@@ -2,12 +2,13 @@
 {%block title%}Profile{%endblock%}
 {% block content %}
 {%with user_data as ud%}
-<h1> <b>Welcome to </b>{{ud.first_name}} {{ud.last_name}}'s profile </h1>
+<h1> <b>Welcome to </b>{{ud.first_name}} {{ud.last_name}}'s profile <a href='/messages/{{user_data.username}}' class="btn btn-primary"><i class="fa fa-envelope-o" aria-hidden="true"></i> Message</a> </h1>
 {%if ud.email%}
 <b>Email :</b>{{ud.email}}
 {%endif%}
 {%endwith%}
 <br>
+
 <h3>
 {{user_data.first_name}} has posted {{user_post.count}} posts.
 </h3>

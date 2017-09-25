@@ -21,14 +21,15 @@ Todo's
  - [x] To Make Search Functionality
  - [x] To Make Post Editable and Deletable By The User
  - [x] To Make Chat Functionality
- - [ ] UI Left for profile, category index, search,404, Signup and login
+ - [x] Basic UI
 
 Low Priority
  - [ ] To extend User Model To add birthdate, profile picture, etc
  - [ ] Add comments of comments
- - [ ] Add edit opetion also in comments
+ - [ ] Add edit option also in comments
 
 Task
+
 A discussions portal with the following features :-
 
 ~~User login*~~
@@ -38,5 +39,3 @@ A discussions portal with the following features :-
 4) ~~Option of searching for the posts , like if i give a query all related posts should be shown in short form with a link to go having the full post~~
 
 ~~Chat~~
-UI(1/2 way)
-The person who completes first has more marks

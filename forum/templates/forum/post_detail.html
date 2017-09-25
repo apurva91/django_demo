@@ -4,8 +4,9 @@
 
 {% with current_post as cp%}
 
-<h1>{{cp.topic}} 
-
+<h1 style="display:inline;">{{cp.topic}} 
+</h1>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {%if user.is_authenticated%}
 {%ifequal user current_post.author%}
 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">Edit/Delete <span class="glyphicon glyphicon-cog"></span></button> 
@@ -25,6 +26,7 @@
 						<input type="submit" value="Edit" class="save btn btn-primary" name="Edit">
 						<input type="submit" value="Delete" class="save btn btn-danger" name="Delete">
 					</form>
+					<br>
 
 				</div>
 				<div class="modal-footer">
@@ -37,11 +39,14 @@
 </div>
 {%endifequal%}
 {%endif%}
-</h1>
-
+<br>
+<br>
+<div class='post_detail'>
 <b> By: </b> <a href="/profile/{{cp.author}}">{{cp.author.first_name}} {{cp.author.last_name}}</a> &nbsp;&nbsp;|&nbsp;&nbsp; <b> Posted on :</b> {{cp.date}} &nbsp;&nbsp;|&nbsp;&nbsp; <b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
-
+</div>
+<div class='post_text'>
 <p>{{cp.text}}</p>
+</div>
 {%endwith%}
 {%if user.is_authenticated%}
 <h3>Comments</h3>

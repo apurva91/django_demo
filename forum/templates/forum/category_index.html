@@ -1,6 +1,7 @@
 {% extends 'forum/base.html' %}
 {%block title%}Category Index{%endblock%}
 {% block content %}
+<h1> Posts in {{category.name}}</h1>
 {% for fp in latest_posts_in_cat %}
 <p class="posts">
 Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
