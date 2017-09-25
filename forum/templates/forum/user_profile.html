@@ -3,21 +3,52 @@
 {%block nav-profile%}class='active'{%endblock%}
 {% block content %}
 {%with user_data as ud%}
-<h1> <b>Welcome </b>{{ud.first_name}} {{ud.last_name}}</h1>
+<h1> <b>Welcome </b>{{ud.first_name}} {{ud.last_name}}
+	{%if user.is_authenticated%}
+	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">Edit Profile <span class="glyphicon glyphicon-cog"></span></button> 
+
+	{%endif%}
+</h1>
+	{%if user.is_authenticated%}
+<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Edit Profile</h4>
+				</div>
+				<div class="modal-body">
+					<div class='input-group'>
+						<form method="POST" class="post-form">{% csrf_token %}
+							{{form.as_p}}
+							<button type="submit" class="save btn btn-default">Save Changes</button>
+						</form>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	{%endif%}
+
 {%endwith%}
 <br>
 You have posted {{user_post.count}} post(s).
 <br>
-<form method="POST" class="post-form">{% csrf_token %}
-{{form}}
-<button type="submit" class="save btn btn-default">Post It!</button>
-</form>
+
 
 {% for fp in user_post %}
+<p class="posts">
 Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
 <br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
 <br>Posted On : {{fp.date}} 
-<hr> 
+</p>
 {% endfor %}
 
 {%endblock%}

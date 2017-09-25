@@ -78,3 +78,5 @@ class LastMsg(models.Model):
         return self.message
     def __str__(self):
         return self.msg_read
+
+

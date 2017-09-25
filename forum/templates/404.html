@@ -1,0 +1,8 @@
+{% extends 'forum/base.html' %}
+{%block title%}Content Not Found{%endblock%}
+
+{% block content %}
+	<h1 style="text-align:center; font-size:100px">404</h1> 
+	<h1 style="text-align:center; ">Not Found</h1>
+	<h2 style="text-align:center; ">{% ifequal exception 'Resolver404' %}Page Not Found{%else%}{%autoescape off%}{{exception}}{%endautoescape%}{%endifequal%}</h2>
+{%endblock%}

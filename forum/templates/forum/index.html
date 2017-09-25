@@ -40,12 +40,13 @@
 <br>
 <h2> Recent Posts </h2>
 {% for fp in latest_posts %}
+<p class="posts">
 Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
 <br>
-<b> By: </b> <a href="/profile/{{fp.author}}">{{fp.author}}</a>
+<b> By: </b> <a href="/profile/{{fp.author}}">{{fp.author.first_name}} {{fp.author.last_name}}</a>
 <br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
 <br>Posted On : {{fp.date}} 
-<hr> 
+</p>
 {% endfor %}
 
 <div class="pagination">

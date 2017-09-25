@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import login, authenticate
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.db.models import Q
+from django.template import RequestContext
 from django.utils import timezone
 from django.core import serializers
 from django.http import HttpResponse, Http404, JsonResponse
@@ -22,7 +23,6 @@ def SignUp(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.birth_date=form.cleaned_data.get('birth_date')
             user.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
@@ -132,7 +132,7 @@ def Profile(request,user):
 	if request.user.is_authenticated:
 		r_user_data=User.objects.filter(username=request.user).get()
 	else:
-		raise Http404("You Must LogIn To View Profile")
+		raise Http404("You Must <a href='/login'>Login</a> First To View Profile")
 	
 	if user_data.id==r_user_data.id:
 	 	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
@@ -162,9 +162,10 @@ def SendShowMsg(request,reciever):
 		raise Http404("You Must LogIn To View Profile")
 	all_msg = Messages.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date')
 	lastmsg=LastMsg.objects.filter((Q(user2=sender.id)&Q(user1=reciever.id))|(Q(user1=sender.id)&Q(user2=reciever.id))).order_by('-date').first()
-	if lastmsg.user1 != sender:
-		lastmsg.msg_read=1
-		lastmsg.save()
+	if lastmsg:
+		if lastmsg.user1 != sender:
+			lastmsg.msg_read=1
+			lastmsg.save()
 	form = MessageForm()
 	if request.method=='POST':
 		form = MessageForm(request.POST)
@@ -182,7 +183,7 @@ def SendShowMsg(request,reciever):
 				lastmsg.msg_read = 0
 				lastmsg.save()
 			else :
-				lastmsg=LastMsg.objects.create(user1=sender,user2=reciever,message=newmessage.message,date=newmessage.date)
+				lastmsg=LastMsg.objects.create(user1=sender,user2=reciever,message=newmessage.message,date=newmessage.date,msg_read=0)
 			return redirect('/messages/'+str(reciever))
 
 	return render(request,'forum/message.html',{'reciever':reciever,'form':form,'all_msg':all_msg})
@@ -203,7 +204,7 @@ def MsgIndex(request):
 	if request.user.is_authenticated:
 		sender=User.objects.filter(username=request.user).get()
 	else:
-		raise Http404("You Must Login First")
+		raise Http404("You Must <a href='/login'>Login</a> First")
 	all_msg= LastMsg.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
 	#all_msg = Messages.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
 	return render(request,'forum/msgindex.html',{'all_msg':all_msg})
@@ -212,7 +213,7 @@ def MsgIRefresh(request):
 	if request.user.is_authenticated:
 		sender=User.objects.filter(username=request.user).get()
 	else:
-		raise Http404("You Must Login First")
+		raise Http404("You Must <a href='/login'>Login</a> First")
 
 	all_msg= LastMsg.objects.filter(Q(user2=sender.id)|Q(user1=sender.id)).order_by('-date')
 	array=[]
@@ -232,3 +233,16 @@ def MsgIRefresh(request):
 def MsgCount(request):
 	msg_count = LastMsg.objects.filter(Q(user2=request.user)&Q(msg_read=0)).count()
 	return HttpResponse(msg_count)
+
+def handler404(request):
+    response = render_to_response('404.html', {'exception':exception},
+                                  context_instance=RequestContext(request))
+    response.status_code = 404
+    return response
+
+
+def handler500(request):
+    response = render_to_response('404.html', {'exception':exception},
+                                  context_instance=RequestContext(request))
+    response.status_code = 500
+    return response

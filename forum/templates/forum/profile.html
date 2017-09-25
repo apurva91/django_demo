@@ -2,18 +2,22 @@
 {%block title%}Profile{%endblock%}
 {% block content %}
 {%with user_data as ud%}
-<b>Name :</b>{{ud.first_name}} {{ud.last_name}}
+<h1> <b>Welcome to </b>{{ud.first_name}} {{ud.last_name}}'s profile </h1>
+{%if ud.email%}
 <b>Email :</b>{{ud.email}}
-
+{%endif%}
 {%endwith%}
 <br>
+<h3>
 {{user_data.first_name}} has posted {{user_post.count}} posts.
+</h3>
 <br>
 {% for fp in user_post %}
+<p class='posts'>
 Topic: <a href = '/posts/{{fp.id}}'> {{fp.topic}} </a>
 <br> Posted in: <a href = '/category/{{fp.category}}'> {{fp.category.name}}</a>
 <br>Posted On : {{fp.date}} 
-<hr> 
+</p>
 {% endfor %}
 
 {%endblock%}
