@@ -5,6 +5,8 @@ Python Version Made On: 2.7
 
 DataBase Client Used : MySQLWorkBench 14.14
 
+Feature Video : https://goo.gl/ccP79V
+
 To Run First Install django-admin and mysql client from pip, create a schema named forum_online import data from EmptyDatabase.sql in the root directory, You aree all set ./manage.py runserver
 
 This is Django Powered website having a type of forum
