@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'bpaify4lg++@5nsj-j2or3wsge8)ksbc4jkbzq#8h@6g9h&qsx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','10.3.1.72']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','10.3.1.72']
 
 
 # Application definition
@@ -74,7 +74,7 @@ WSGI_APPLICATION = 'djnago_demo.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -92,7 +92,7 @@ DATABASES = {
         'PORT': '8000',
     }
 }
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

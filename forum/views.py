@@ -136,17 +136,15 @@ def Profile(request,user):
 	
 	if user_data.id==r_user_data.id:
 	 	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
-	 	
 	 	if request.method=='POST':
-			form = EditProfileForm(request.POST,instance=user_data)
-		
-			if form.is_valid():
-				user_data = form.save()
-				user_data.save()
-				return redirect('/profile/'+str(user))
-		else:
-			form = EditProfileForm(initial={'first_name': user_data.first_name,'last_name': user_data.last_name,'email': user_data.email,})
-		return render(request, 'forum/user_profile.html', {'user_post':user_post,'user_data':user_data, 'form':form})
+	 		form = EditProfileForm(request.POST,instance=user_data)
+	 		if form.is_valid():
+	 			user_data = form.save()
+	 			user_data.save()
+	 			return redirect('/profile/'+str(user))
+	 		else:
+	 			form = EditProfileForm(initial={'first_name': user_data.first_name,'last_name': user_data.last_name,'email': user_data.email,})
+	 			return render(request, 'forum/user_profile.html', {'user_post':user_post,'user_data':user_data, 'form':form})
 	else:
 		user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
 		return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
