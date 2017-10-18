@@ -25,7 +25,7 @@ SECRET_KEY = 'bpaify4lg++@5nsj-j2or3wsge8)ksbc4jkbzq#8h@6g9h&qsx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','10.3.1.72']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','10.3.1.72','fluxodetudo.azurewebsites.net']
 
 
 # Application definition
