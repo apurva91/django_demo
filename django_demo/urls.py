@@ -1,4 +1,4 @@
-"""djnago_demo URL Configuration
+"""django_demo URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^', include('forum.urls')),
 	url(r'^login/$', auth_views.login, name='login'),
 	url(r'^logout/$', auth_views.logout, {'next_page': '/'} , name='logout'),
+    url(r'^tinymce/', include('tinymce.urls')),
 ]

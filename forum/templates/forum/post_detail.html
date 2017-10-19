@@ -1,15 +1,46 @@
 {% extends 'forum/base.html' %}
+{%block ucss%}
+.modal-dialog{
+width:80%;
+padding:20px;
+}
+.modal-body .input-group{
+	width:100%;
+}
+.post_text{
+border:2px solid rgba(0,0,0,0.1);
+border-radius:5px;
+padding:40px;
+padding-top:20px;
+font-family: 'Source Sans Pro', sans-serif;
+font-size:20px;
+}
+.post_detail{
+margin-left:15%;
+margin-right:15%;
+text-align:center;
+	font-family:Raleway, sans-serif;
+}
+.heading{
+margin-left:15%;
+margin-right:15%;
+text-align:center;
+}
+h1{
+	font-family:Raleway, sans-serif;
+}
 
+{%endblock%}
 {% block content %}
 
 {% with current_post as cp%}
 
-<h1 style="display:inline;">{{cp.topic}} 
-</h1>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<h1 class="heading" >{{cp.topic}}</h1>
 {%if user.is_authenticated%}
 {%ifequal user current_post.author%}
-<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">Edit/Delete <span class="glyphicon glyphicon-cog"></span></button> 
+<div class="heading">
+<button type="button" class=" btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal">Edit/Delete <span class="glyphicon glyphicon-cog"></span></button>
+</div>
 <div id="myModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
 
@@ -22,7 +53,7 @@
 			<div class="modal-body">
 				<div class='input-group'>
 					<form method="POST" class="post-form">{% csrf_token %}
-						{{form2.as_p}}
+						{%autoescape off%}{{ form2.as_p }}{%endautoescape%}
 						<input type="submit" value="Edit" class="save btn btn-primary" name="Edit">
 						<input type="submit" value="Delete" class="save btn btn-danger" name="Delete">
 					</form>
@@ -37,28 +68,31 @@
 		</div>
 	</div>
 </div>
+
 {%endifequal%}
 {%endif%}
 <br>
-<br>
 <div class='post_detail'>
-<b> By: </b> <a href="/profile/{{cp.author}}">{{cp.author.first_name}} {{cp.author.last_name}}</a> &nbsp;&nbsp;|&nbsp;&nbsp; <b> Posted on :</b> {{cp.date}} &nbsp;&nbsp;|&nbsp;&nbsp; <b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
+	<b> By: </b> <a href="/profile/{{cp.author}}">{{cp.author.first_name}} {{cp.author.last_name}}</a> &nbsp;&nbsp;|&nbsp;&nbsp; <b> Posted on :</b> {{cp.date}} &nbsp;&nbsp;|&nbsp;&nbsp; <b>  Posted in :</b> <a href = '/category/{{cp.category}}'> {{cp.category.name}} </a>
 </div>
+<br>
 <div class='post_text'>
-<p>{{cp.text}}</p>
+	<p>{%autoescape off%}{{cp.text}}{%endautoescape%}</p>
 </div>
 {%endwith%}
 {%if user.is_authenticated%}
+<br>
 <h3>Comments</h3>
+<br>
 <form method="POST" class="post-form">{% csrf_token %}
-<div class='row'>
-	<div class='col-xs-6'>
-		{{form.as_p}}
-	</div>
-	<div class='col-xs-6' style='margin-top:5px;	'>
-	<br>
-		<input type="submit" value='Comment' name='Comment' class="save btn btn-default">	
-	</div>
+	<div class='row'>
+		<div class='col-xs-6'>
+			{{form.as_p}}
+		</div>
+		<div class='col-xs-6' style='margin-top:5px;'>
+			<br>
+			<input type="submit" value='Comment' name='Comment' class="save btn btn-default">	
+		</div>
 	</div>
 </form>
 {%else%}
@@ -81,4 +115,7 @@ To Add A Comment <a href='/login'>LogIn</a> First
 	{%endfor%}
 	{%endifequal%}
 </div>	
+<br>
+<br>
+<br>
 {%endblock%}
