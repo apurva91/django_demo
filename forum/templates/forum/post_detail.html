@@ -29,7 +29,21 @@ text-align:center;
 h1{
 	font-family:Raleway, sans-serif;
 }
-
+footer {
+    position: fixed;
+    height: auto;
+    bottom: 0;
+    width: 100%;
+    background-color:white;
+    font-size:20px;
+}
+.content{
+	margin-bottom:100px;
+}
+.panel-info{
+	border:0px solid white;
+	box-shadow:none;
+}
 {%endblock%}
 {% block content %}
 
@@ -118,4 +132,39 @@ To Add A Comment <a href='/login'>LogIn</a> First
 <br>
 <br>
 <br>
+{%endblock%}
+
+{%block loadfooter%}
+
+<footer class="fixed-bottom">
+    <div class="panel panel-info">
+      <div class="panel-heading" id="mapi">Panel Head</div>
+      <div class="panel-body" id="meaning">Panel Meaning</div>
+    </div>
+</footer>
+
+<script type="text/javascript">
+  function getSelectionText() {
+    var text = "";
+    if (window.getSelection){
+      text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+      text = document.selection.createRange().text;
+    }
+    return text;
+  }
+
+  document.onmouseup = document.onkeyup = document.onselectionchange = function() {
+    var x = getSelectionText();
+    $('#mapi').text(x);
+    if(x.length==0){
+    	$('.panel').hide();
+    }
+    else{
+    	$('.panel').show();
+    	$('#meaning').text('Loading...');
+    }
+  };
+</script>
+
 {%endblock%}
