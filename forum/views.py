@@ -123,6 +123,7 @@ def SearchForum(request):
 
 	return render(request,'forum/search.html',{'query':query, 'que':que})
 
+
 def Profile(request,user):
 	try :
 		user_data=User.objects.filter(username=user).get()
@@ -136,15 +137,17 @@ def Profile(request,user):
 	
 	if user_data.id==r_user_data.id:
 	 	user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
+	 	
 	 	if request.method=='POST':
-	 		form = EditProfileForm(request.POST,instance=user_data)
-	 		if form.is_valid():
-	 			user_data = form.save()
-	 			user_data.save()
-	 			return redirect('/profile/'+str(user))
-	 		else:
-	 			form = EditProfileForm(initial={'first_name': user_data.first_name,'last_name': user_data.last_name,'email': user_data.email,})
-	 			return render(request, 'forum/user_profile.html', {'user_post':user_post,'user_data':user_data, 'form':form})
+			form = EditProfileForm(request.POST,instance=user_data)
+		
+			if form.is_valid():
+				user_data = form.save()
+				user_data.save()
+				return redirect('/profile/'+str(user))
+		else:
+			form = EditProfileForm(initial={'first_name': user_data.first_name,'last_name': user_data.last_name,'email': user_data.email,})
+		return render(request, 'forum/user_profile.html', {'user_post':user_post,'user_data':user_data, 'form':form})
 	else:
 		user_post=ForumPost.objects.filter(author__username=user).order_by('-date')[:5]
 		return render(request, 'forum/profile.html', {'user_post':user_post,'user_data':user_data})
@@ -240,7 +243,6 @@ def handler404(request):
                                   context_instance=RequestContext(request))
     response.status_code = 404
     return response
-
 
 def handler500(request):
     response = render_to_response('404.html', {'exception':exception},
