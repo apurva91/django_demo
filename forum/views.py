@@ -12,6 +12,7 @@ from django.http import HttpResponse, Http404, JsonResponse
 from .models import ForumPost, PostCategory, Comment, Messages, LastMsg
 from .forms import PostForm, SignUpForm, CommentForm, EditProfileForm, MessageForm
 # Create your views here.
+from urllib import unquote
 import json
 import logging
 logger = logging.getLogger(__name__)
@@ -249,3 +250,4 @@ def handler500(request):
                                   context_instance=RequestContext(request))
     response.status_code = 500
     return response
+

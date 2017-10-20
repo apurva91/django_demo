@@ -5,7 +5,7 @@ width:80%;
 padding:20px;
 }
 .modal-body .input-group{
-	width:100%;
+width:100%;
 }
 .post_text{
 border:2px solid rgba(0,0,0,0.1);
@@ -19,7 +19,7 @@ font-size:20px;
 margin-left:15%;
 margin-right:15%;
 text-align:center;
-	font-family:Raleway, sans-serif;
+font-family:Raleway, sans-serif;
 }
 .heading{
 margin-left:15%;
@@ -27,24 +27,25 @@ margin-right:15%;
 text-align:center;
 }
 h1{
-	font-family:Raleway, sans-serif;
+font-family:Raleway, sans-serif;
 }
 footer {
-    position: fixed;
-    height: auto;
-    bottom: 0;
-    width: 100%;
-    background-color:white;
-    font-size:20px;
+position: fixed;
+height: auto;
+bottom: 0;
+width: 100%;
+background-color:white;
+font-size:20px;
 }
 .content{
-	margin-bottom:100px;
+margin-bottom:100px;
 }
 .panel-info{
-	border:0px solid white;
-	box-shadow:none;
+border:0px solid white;
+box-shadow:none;
 }
 {%endblock%}
+
 {% block content %}
 
 {% with current_post as cp%}
@@ -53,7 +54,7 @@ footer {
 {%if user.is_authenticated%}
 {%ifequal user current_post.author%}
 <div class="heading">
-<button type="button" class=" btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal">Edit/Delete <span class="glyphicon glyphicon-cog"></span></button>
+	<button type="button" class=" btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal">Edit/Delete <span class="glyphicon glyphicon-cog"></span></button>
 </div>
 <div id="myModal" class="modal fade" role="dialog">
 	<div class="modal-dialog">
@@ -137,34 +138,77 @@ To Add A Comment <a href='/login'>LogIn</a> First
 {%block loadfooter%}
 
 <footer class="fixed-bottom">
-    <div class="panel panel-info">
-      <div class="panel-heading" id="mapi">Panel Head</div>
-      <div class="panel-body" id="meaning">Panel Meaning</div>
-    </div>
+	<div class="panel panel-info" style="display:none;">
+		<div class="panel-heading" id="mapi">Panel Head</div>
+		<div class="panel-body" id="meaning">Panel Meaning</div>
+	</div>
 </footer>
 
 <script type="text/javascript">
-  function getSelectionText() {
-    var text = "";
-    if (window.getSelection){
-      text = window.getSelection().toString();
-    } else if (document.selection && document.selection.type != "Control") {
-      text = document.selection.createRange().text;
-    }
-    return text;
-  }
+	var yz="";
+	function getRecieveJson(argum){
+		$.ajax({
+			url: 'http://139.59.92.162:8000/query/'+argum,
+			success: function(data) {
+				yz = data;
+				yz = JSON.parse(yz);
+				var htm = '<p class="meani">' + yz.webPages.value[0].snippet +'</p> &nbsp;<a class="meanilink" title="Open Reference" href="'+yz.webPages.value[0].url+'" target="_blank" ><i class="fa fa-external-link" aria-hidden="true"></i></a>  &nbsp;&nbsp;&nbsp;&nbsp;'+'<a class="meanilink" href="'+yz.webPages.webSearchUrl+'" target="_blank" title="Get More Results From Bing"><i class="fa fa-external-link" aria-hidden="true"></i></a>';
+				$('#meaning').html(htm);
+			},
+			error: function(){
+				$('#meaning').html('Check Connection');
+			}
 
-  document.onmouseup = document.onkeyup = document.onselectionchange = function() {
-    var x = getSelectionText();
-    $('#mapi').text(x);
-    if(x.length==0){
-    	$('.panel').hide();
-    }
-    else{
-    	$('.panel').show();
-    	$('#meaning').text('Loading...');
-    }
-  };
+		});
+	}
+/*	function getSelectionText() {
+		var text = "";
+		var full_text="";
+
+		if (window.getSelection){
+			text = window.getSelection().toString();
+		} else if (document.selection && document.selection.type != "Control") {
+			text = document.selection.createRange().text;
+		}
+		return text;
+	}
+
+	document.onmouseup = document.onkeyup = document.onselectionchange = function() {
+		var x = getSelectionText();
+		$('#mapi').text(x);
+		if(x.length==0){
+			$('.panel').hide();
+		}
+		else{
+			$('.panel').show();
+			$('#meaning').text('Loading...');
+			getRecieveJson(x);
+		}
+	};
+	*/
+	var t = '';
+/*	function gText(e) {*/
+  $(".post_text").mouseup(function(){
+
+		t = (document.all) ? document.selection.createRange().text : 								document.getSelection();
+		var x ="";
+		x+=t;
+		$('#mapi').text(x);
+
+		if(x.length==0){
+			$('.panel').hide();
+		}
+		else{
+			$('.panel').show();
+			$('#meaning').text('Loading...');
+			getRecieveJson(x);
+		}
+	});
+/*
+	document.onmouseup = gText;
+	if (!document.all) document.captureEvents(Event.MOUSEUP);
+*/
+
 </script>
 
 {%endblock%}
