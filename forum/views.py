@@ -123,6 +123,7 @@ def SearchForum(request):
 
 	return render(request,'forum/search.html',{'query':query, 'que':que})
 
+
 def Profile(request,user):
 	try :
 		user_data=User.objects.filter(username=user).get()
@@ -242,7 +243,6 @@ def handler404(request):
                                   context_instance=RequestContext(request))
     response.status_code = 404
     return response
-
 
 def handler500(request):
     response = render_to_response('404.html', {'exception':exception},

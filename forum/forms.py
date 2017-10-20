@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class PostForm(forms.ModelForm):
 	topic = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
-	text = forms.CharField(widget=forms.Textarea(attrs={'rows':'5', 'cols':'50','class':'form-control'}))
+	#text = forms.CharField(widget=forms.Textarea(attrs={'rows':'5', 'cols':'50','class':'form-control'}))
 	class Meta:
 		model = ForumPost
 		fields = ('topic', 'text','category')

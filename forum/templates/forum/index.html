@@ -1,6 +1,10 @@
 {% extends 'forum/base.html' %}
 {%block title%}Forum{%endblock%}
-
+{%block ucss%}
+.modal-dialog{
+    width:800px;
+}
+{%endblock%}
 {% block nav-home%}class="active"{%endblock%}
 {% block content %}
 {%if user.is_authenticated%}
@@ -20,7 +24,7 @@
     <div class="modal-body">
         <div class='input-group'>
             <form method="POST" class="post-form">{% csrf_token %}
-                {{ form.as_p }}
+                {%autoescape off%}{{ form.as_p }}{%endautoescape%}
                 <button type="submit" class="save btn btn-default">Post</button>
             </form>
             <br>
@@ -29,7 +33,6 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
     </div>
-
 </div>
 </div>
 </div>
