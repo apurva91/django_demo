@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-
+from tinymce.models import HTMLField
 # Create your models here.
 
 class PostCategory(models.Model):
@@ -25,7 +25,8 @@ class PostCategory(models.Model):
 class ForumPost(models.Model):
     author = models.ForeignKey(User, on_delete = models.CASCADE)
     topic = models.CharField(max_length=255)
-    text = models.CharField(max_length=1000)
+    #text = models.CharField(max_length=1000)
+    text = HTMLField()
     date = models.DateTimeField('date')
     category = models.ForeignKey( PostCategory, on_delete = models.CASCADE )
 

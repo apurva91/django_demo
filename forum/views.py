@@ -12,6 +12,7 @@ from django.http import HttpResponse, Http404, JsonResponse
 from .models import ForumPost, PostCategory, Comment, Messages, LastMsg
 from .forms import PostForm, SignUpForm, CommentForm, EditProfileForm, MessageForm
 # Create your views here.
+from urllib import unquote
 import json
 import logging
 logger = logging.getLogger(__name__)
@@ -122,6 +123,7 @@ def SearchForum(request):
 		query = paginator.page(paginator.num_pages)
 
 	return render(request,'forum/search.html',{'query':query, 'que':que})
+
 
 def Profile(request,user):
 	try :
@@ -243,9 +245,9 @@ def handler404(request):
     response.status_code = 404
     return response
 
-
 def handler500(request):
     response = render_to_response('404.html', {'exception':exception},
                                   context_instance=RequestContext(request))
     response.status_code = 500
     return response
+
