@@ -44,6 +44,7 @@ margin-bottom:100px;
 border:0px solid white;
 box-shadow:none;
 }
+
 {%endblock%}
 
 {% block content %}
@@ -132,6 +133,9 @@ To Add A Comment <a href='/login'>LogIn</a> First
 <br>
 <br>
 <br>
+<iframe src="//127.0.0.1:8080/loading" id="FrameID" style="background-color:white; border:2px solid black; display:none; position:fixed; height:80%; width:80%; left:10%; top:15%; z-index:5000"></iframe>
+<button class="btn btn-primary" id="btfr" onclick="$('#FrameID').hide(); $('#btfr').hide();$('#FrameID').attr('src','//127.0.0.1:8080/loading');
+		document.getElementById('FrameID').contentWindow.location.reload(true);"style="display:none; 	position:fixed; top:10%; right:5%; z-index:5000"><i class="fa fa-close"></i></button>
 {%endblock%}
 
 {%block loadfooter%}
@@ -146,63 +150,55 @@ To Add A Comment <a href='/login'>LogIn</a> First
 
 
 <!-- Modal -->
-{# <div id="mymodel" class="modal fade" role="dialog">
-  <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="modelhead">Modal Header</h4>
-      </div>
-      <div class="modal-body" id="#helloworld">
-        <p>Some text in the modal.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
 
-  </div>
-</div>
- #}
 <script type="text/javascript">
 	var yz="";
 	var text="";
-/*	function getImageJson(){
-		$("#mymodel").show();
-				$("#modelhead").html(text);
-				$("#helloworld").html("Loading...");
-				
+	/*
+	function getImageJson(){
+
 		$.ajax({
 			url: 'http://139.59.92.162:8000/data/'+text,
 			success: function(py) {
+				$('.overlay-head').html('Image Result For : '+ text+
+					'<i class="fa fa-close" style="position:absolute; right:30px;" onclick="$(\'.overlay\').hide()"></i>');
 				yz = py;
 				yz = JSON.parse(yz);
-				var htmll="";
+				var htmll="<div class='row'>";
+
 				for(var i=0; i<yz.value.length; i++){
-					htmll+='<img src="'+yz.value[i].contentUrl+'"></img>';
-					$("#helloworld").html(htmll);
-			}
-				//var htm = '<p class="meani">' + yz.webPages.value[0].snippet +'</p> &nbsp;<a class="meanilink" title="Open Reference" href="'+yz.webPages.value[0].url+'" target="_blank" ><i class="fa fa-external-link" aria-hidden="true"></i></a>  &nbsp;&nbsp;&nbsp;&nbsp;'+'<a class="meanilink" href="'+yz.webPages.webSearchUrl+'" target="_blank" title="Get More Results From Bing"><i class="fa fa-external-link" aria-hidden="true"></i></a><a id="imgload"><i class="fa fa-picture-o" aria-hidden="true"></i></a>';
-				$('#meaning').html(1);
+					htmll+='<div class="col-xs-6"><img src="'+yz.value[i].contentUrl+'" style="z-index:500; margin:0px; padding:25px;"></img></div>';
+				}
+				htmll+="</div>";
+				$('.cont').html(htmll);
+				$('.overlay').show();
+				$('.panel').hide();
 			},
 			error: function(){
 				$('#meaning').html('Please Install <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">Install Extension For Using API(s) due to security issues.</a> ');
 			}
 		});
 	}
-*/
+	*/
+	function getImageJson(){
+		
+		$('#FrameID').show();
+		$('#btfr').show();
+		$('#FrameID').attr('src','//127.0.0.1:8080/data/'+text);
+		document.getElementById('FrameID').contentWindow.location.reload(true);
+
+	}
 	function getRecieveJson(argum){
 		$.ajax({
 			url: 'http://139.59.92.162:8000/query/'+argum,
 			success: function(data) {
 				yz = data;
 				yz = JSON.parse(yz);
-				var htm = '<p class="meani">' + yz.webPages.value[0].snippet +'</p> &nbsp;<a class="meanilink" title="Open Reference" href="'+yz.webPages.value[0].url+'" target="_blank" ><i class="fa fa-external-link" aria-hidden="true"></i></a>  &nbsp;&nbsp;&nbsp;&nbsp;'+'<a class="meanilink" href="'+yz.webPages.webSearchUrl+'" target="_blank" title="Get More Results From Bing"><i class="fa fa-external-link" aria-hidden="true"></i></a>';
+				var htm = '<p class="meani">' + yz.webPages.value[0].snippet +'</p> &nbsp;<a class="meanilink" title="Open Reference" href="'+yz.webPages.value[0].url+'" target="_blank" ><i class="fa fa-external-link" aria-hidden="true"></i></a>  &nbsp;&nbsp;&nbsp;&nbsp;'+'<a class="meanilink" href="'+yz.webPages.webSearchUrl+'" target="_blank" title="Get More Results From Bing"><i class="fa fa-external-link" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-info btn-lg" onclick="getImageJson();">Search For Images</button>';
 				$('#meaning').html(htm);
 			},
-			//&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="getImageJson();"><i class="fa fa-picture-o" aria-hidden="true"></i></a>'
+			//
 			error: function(){
 				$('#meaning').html('Please Install <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">Install Extension For Using API(s) due to security issues.</a> ');
 			}
@@ -235,28 +231,28 @@ To Add A Comment <a href='/login'>LogIn</a> First
 	};
 	*/
 	var t = '';
- /*	function gText(e) {*/
-  $(".post_text").mouseup(function(){
+	/*	function gText(e) {*/
+		$(".post_text").mouseup(function(){
 
-		t = (document.all) ? document.selection.createRange().text : 								document.getSelection();
-		var x ="";
-		x+=t;
-		$('#mapi').text(x);
+			t = (document.all) ? document.selection.createRange().text : 								document.getSelection();
+			var x ="";
+			x+=t;
+			$('#mapi').text(x);
 
-		if(x.length==0){
-			$('.panel').hide();
-		}
-		else{
-			text=x;
-			$('.panel').show();
-			$('#meaning').text('Loading...');
-			getRecieveJson(x);
-		}
-	});
+			if(x.length==0){
+				$('.panel').hide();
+			}
+			else{
+				text=x;
+				$('.panel').show();
+				$('#meaning').text('Loading...');
+				getRecieveJson(x);
+			}
+		});
  /*
 	document.onmouseup = gText;
 	if (!document.all) document.captureEvents(Event.MOUSEUP);
- */
+	*/
 
 </script>
 

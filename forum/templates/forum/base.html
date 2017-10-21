@@ -2,16 +2,16 @@
 <html>
 <head>
 	<title>
-		{%block title%}{%endblock%}
+		{%block title%}Fluxo-De-Tudo{%endblock%}
 	</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-{%load staticfiles%}
-	<script src="{%static 'js/tinymce/tinymce.min.js'%}"></script>
-	<script src="{% static 'js/custom.js'%}"></script>
+	<link rel="shortcut icon" href="http://www.iconj.com/ico/d/z/dzkfhpqpx7.ico" type="image/x-icon" />
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.7.1/tinymce.min.js"></script>
+	<script type="text/javascript" src="http://yourjavascript.com/07503021211/custom.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 	<link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -19,7 +19,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro" rel="stylesheet">
 
 	<style type="text/css">
-	
+
 		.comments{
 			padding-top: 5px;
 			background-color:#eff1f4;
@@ -59,32 +59,33 @@
 
 <body>
 	<script type="text/javascript">
-	function getmsg() {
-		$.ajax({
-			url: '/messagec',
-			success: function(data) {
-				var htm='';
-				if(data!=0) htm='<span class="glyphicon glyphicon-envelope" style="color:red"></span> Messages('+data+')';
-				else htm='<span class="glyphicon glyphicon-envelope"></span> Messages';
-				$('#Messages').html(htm);
-			},
-			error: function(){
-				console.log('Ajax Error');
-			}
+		{%if user.is_authenticated%}
+		function getmsg() {
+			$.ajax({
+				url: '/messagec',
+				success: function(data) {
+					var htm='';
+					if(data!=0) htm='<span class="glyphicon glyphicon-envelope" style="color:red"></span> Messages('+data+')';
+					else htm='<span class="glyphicon glyphicon-envelope"></span> Messages';
+					$('#Messages').html(htm);
+				},
+				error: function(){
+					console.log('Ajax Error');
+				}
 
+			});
+		}
+		$(function(){
+			getmsg();
 		});
-	}
-	$(function(){
 		getmsg();
-	});
-	getmsg();
-	setInterval("getmsg()", 1000);
-
-</script>
+		setInterval("getmsg()", 1000);
+		{%endif%}
+	</script>
 	<nav class='navbar navbar-inverse navbar-fixed-top'>
 		<div class='container-fluid'>
 			<div class='navbar-header'>
-				<a class="navbar-brand" href="/">Fluxo-De-Tudo</a>
+				<a class="navbar-brand" href="/"><img src="http://sk.uploads.im/t/8tlJv.png" border="0" style="width:20px; display:inline"/> Fluxo-De-Tudo</a>
 			</div>
 			<ul class="nav navbar-nav">
 				<li {%block nav-home%}{%endblock%}><a href="/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
