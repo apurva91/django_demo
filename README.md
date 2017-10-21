@@ -1,43 +1,32 @@
-# forum_django
+# Fluxo De Tudo
+The Flow Of Everything
+
 Django Version Made On: 1.11.5
 
 Python Version Made On: 2.7
 
-DataBase Client Used : MySQLWorkBench 14.14
+~~DataBase Client Used : MySQLWorkBench 14.14~~
+Sqlite
 
-Feature Video : https://goo.gl/ccP79V
+Feature Video : https://www.youtube.com/watch?v=OAEQLCMrR4c
 
-To Run First Install django-admin and mysql client from pip, create a schema named forum_online import data from EmptyDatabase.sql in the root directory, You aree all set ./manage.py runserver
+```
+pip2 install -r requirements.txt
+python2 manage.py runserver
+```
 
-This is Django Powered website having a type of forum
+This is Django Powered website is a Knowledge Portal as an CFD Event
 
-Here You Have to first sign up to add new posts, send messages, view profiles, add comments, edit and delete posts, without Logging in one can only view posts and comments and search them.
-
-Chat is fully Ajax Supported Whenever a message is recieved the green color button from navbar changes to blue, Unread messages are shown by exclaimation mark and read are shown with a check sign.
+Here You Have to first sign up to add new posts, send messages, view profiles, add comments, edit and delete posts, without Logging in one can only view posts and comments and search them, There is even a chat feature which allows you to chat with other users. It even uses API's to give out a lot of information.
+When you highlight a particular text in a post it gives the meaning of the text or phrase in the bottom, and if you are not satisfied you can search furthermore, and you can also search for images for that text.
 
 Todo's
  - [x] To Make Forum Posts
  - [x] To Make Commenting
+ - [x] To Get the Meaning & Images of Highlighted Text 
  - [x] To Link The User Model with Posts and Comments
  - [x] To Make Profile Page
  - [x] To Make Search Functionality
  - [x] To Make Post Editable and Deletable By The User
  - [x] To Make Chat Functionality
  - [x] Basic UI
-
-Low Priority
- - [ ] To extend User Model To add birthdate, profile picture, etc
- - [ ] Add comments of comments
- - [ ] Add edit option also in comments
-
-Task
-
-A discussions portal with the following features :-
-
-~~User login*~~
-1) ~~A platform for posting posts with categories (like relationship,studies etc)~~
-2) ~~Option of editing/deleting the post for the one who created it~~
-3) ~~Option of commenting on the posts~~
-4) ~~Option of searching for the posts , like if i give a query all related posts should be shown in short form with a link to go having the full post~~
-
-~~Chat~~
